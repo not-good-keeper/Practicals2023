@@ -1,0 +1,118 @@
+import java.util.*;
+class P3Q3
+{
+    String[] s;    
+    int len1,len2;//length of the two strings
+
+    void sentense(String str, int start,int end ,int x)//making the two sentenses
+    {
+        String wrd="";
+        for(int i=start-1,w=x;i<end;i++)
+        {
+            char ch = str.charAt(i);            
+            if(ch==' '||ch=='.'||ch=='?'||ch=='!')
+            {
+                s[w]=wrd;                
+                wrd="";                
+                w++;
+            }else
+            {
+                wrd=wrd+ch;
+            }            
+        }
+    }
+
+    void inp()// to accept paragraph and check validity and find length of the senenses
+    {
+        int c=0,w=0;//sentensecount and word count
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Enter the Paragrah with 2 Sentenses only");
+        String str = sc.nextLine();
+        str = str.toUpperCase();//converting string to caps 
+        int change=0;//the break even point
+        for(int i=0;i<str.length();i++)
+        {    
+            char ch = str.charAt(i);
+            if(c==0)//first sentense
+            {
+                if(ch=='.'||ch=='?'||ch=='!')
+                {
+                    w++;
+                    len1=w;  
+                    c++;
+                    change=i;
+                }else if(ch==' ')
+                    w++;
+            }else if(c==1)//second sentense
+            {
+
+                if(ch=='.'||ch=='?'||ch=='!')
+                {
+                    w++;
+                    len2= w;   
+                    c++;
+                }else if(ch==' ')
+                    w++;
+            } 
+        }
+        if(c!=2)
+        {
+            if(c==0)
+                System.out.println("INVALID INPUT");
+            else
+                System.out.println("INVALID PARAGRAPH");
+            System.exit(0);
+        }
+        s= new String[len1+len2-1];        
+        sentense(str,0,change+1,0);
+        sentense(str,change+1,str.length(),len1);
+    } 
+    String common[] = new String[Math.max(len1,len2)];
+
+    boolean check(String str)
+    {
+
+        for(int i=len1;i<len2;i++)
+        {
+            if(str.equalsIgnoreCase(s[i]))
+                return true;
+        }
+        return false;
+    }
+
+    boolean checkcom(String str)
+    {
+        for(int i=0;i<common.length;i++)
+        {
+            if(str.equals(common[i]))
+                return true;
+        }
+        return false;        
+    }    
+
+    void common()
+    {
+
+        for(int i=0,j=0;i<len1;i++)
+        {
+            if(check(s[i]))
+                if(checkcom(s[i]))
+                {
+                    common[j]=s[i];
+                    j++;
+                }
+        }
+        System.out.println("SENTENCE 1: " + len1+ " Words");
+        System.out.println("SENTENCE 2: " + len2+ " Words");
+
+        for(int i=0;i<common.length;i++)
+            System.out.println(common[i]);
+    }
+
+    public static void main()
+    {
+        P3Q3 obj = new P3Q3();
+        obj.inp();
+        obj.common();
+    }
+}
